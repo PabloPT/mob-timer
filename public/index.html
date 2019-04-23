@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mob programming watch</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+      div.mob-gui {
+        position: absolute;
+      }
+      div.mob-gui-element {
+        margin: 20px;
+      }
+      button {
+        color: white;
+        border-radius: 5px;
+        border: 0;
+        /* background-color: rgb(132, 192, 155); */
+        background-color: rgb(0, 150, 0);
+        padding: 10px;
+      }
+      input[type='text'],
+      input[type='number'] {
+        padding: 5px;
+        border-radius: 5px;
+        border: 0;
+        background-color: rgb(255, 217, 1);
+      }
+      .duration-text {
+        color: white;
+      }
+    </style>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="./javascripts/MobsterTextMesh.js"></script>
+    <script src="./javascripts/NixieTubeBulb.js"></script>
+    <script src="./javascripts/StopWatch.js"></script>
+    <script src="./javascripts/OrbitingSpotLight.js"></script>
+    <script src="./javascripts/ClockDisplay.js"></script>
+    <script src="./javascripts/Mob.js"></script>
+    <script src="./javascripts/MobWatchApp.js"></script>
+  </head>
+  <body>
+    <div class="mob-gui">
+      <div class="mob-gui-element">
+        <input type="text" id="mobsterNameInput" placeholder="mobster name" />
+        <button
+          id="addMobsterBtn"
+          onclick="mobWatchApp.addNewMobster(getElementById('mobsterNameInput').value);"
+        >
+          Add mobster
+        </button>
+      </div>
+      <div class="mob-gui-element">
+        <div class="duration-text">Duration:</div>
+        <input
+          type="number"
+          id="timerLengthInput"
+          value="10"
+          onchange="mobWatchApp.stopWatch.setDuration(this.value);"
+        />
+      </div>
+      <div class="mob-gui-element">
+        <button onclick="mobWatchApp.stopWatchStart();">Start timer</button>
+        <button onclick="mobWatchApp.stopWatchPause();">Pause timer</button>
+        <button onclick="mobWatchApp.stopWatchReset();">Reset timer</button>
+      </div>
+    </div>
+
+    <script>
+      //classes
+
+      const mobWatchApp = new MobWatchApp();
+      const loader = new THREE.FontLoader();
+      loader.load('./helvetiker_regular.typeface.json', font => {
+        mobWatchApp.loadMobsters(font);
+        mobWatchApp.loadClockDisplay(font);
+      });
+      window.addEventListener('mousemove', mobWatchApp.onMouseMove, false);
+      window.addEventListener('mouseup', mobWatchApp.onMouseUp, false);
+      // window.addEventListener(
+      //   'keyup',
+      //   mobWatchApp.pauseOrbitingSpotLight,
+      //   false
+      // );
+    </script>
+  </body>
+</html>
