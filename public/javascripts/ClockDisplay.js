@@ -6,6 +6,10 @@ class ClockDisplay extends THREE.Group {
   constructor(font, color, position) {
     super();
 
+    if (!font && !color && !position) {
+      return;
+    }
+
     this.font = font;
     this.color = color;
     this.position = position;

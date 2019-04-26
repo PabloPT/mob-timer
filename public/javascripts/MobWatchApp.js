@@ -4,6 +4,7 @@ class MobWatchApp {
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
   stopWatch = new StopWatch(10);
+  particleSystem = new ParticleSystem(); //initiate to avoid undefined checks, reinitiate on font loaded
 
   constructor() {
     this.renderer = new THREE.WebGLRenderer();
@@ -16,28 +17,34 @@ class MobWatchApp {
       0.1,
       1000
     );
-    // this.camera.position.z = 15;
-    // this.camera.position.y = 1;
-    // this.camera.position.x = -2;
-    //this.camera.position.set(-2, 1, 15);
     this.camera.position.set(0, 0, 15);
-    //this.camera.rotation.y = (-16 * Math.PI) / 180;
-    //this.cameraHelper = new THREE.CameraHelper(this.camera);
-    //this.scene.add(this.cameraHelper);
 
     this.ambientLight = new THREE.AmbientLight(0x404040);
-    this.scene.add(this.ambientLight);
+
     this.spotLightTarget = new THREE.Mesh(
       new THREE.SphereBufferGeometry(0.1, 16, 8),
       new THREE.MeshBasicMaterial({ color: 0xffc009 })
     );
     this.spotLightTarget.visible = false;
     this.spotLightTarget.position.set(2, 0, 0);
-    this.scene.add(this.spotLightTarget);
 
     this.orbitingSpotLight = this.createOrbitingSpotLight(this.spotLightTarget);
     this.orbitingSpotLight.visible = false;
+
+    const mainSpotLight = new THREE.SpotLight(0xffc009);
+    mainSpotLight.position.set(2, 8, -10);
+    mainSpotLight.castShadow = true;
+    mainSpotLight.shadow.mapSize.width = 1024;
+    mainSpotLight.shadow.mapSize.height = 1024;
+    mainSpotLight.shadow.camera.near = 500;
+    mainSpotLight.shadow.camera.far = 4000;
+    mainSpotLight.shadow.camera.fov = 30;
+    mainSpotLight.angle = Math.PI / 10;
+
+    this.scene.add(this.ambientLight);
+    this.scene.add(this.spotLightTarget);
     this.scene.add(this.orbitingSpotLight);
+    this.scene.add(mainSpotLight);
 
     this.mob = new Mob();
 
@@ -100,6 +107,7 @@ class MobWatchApp {
 
   isTimeUp = () => {
     if (this.stopWatch.timeIsUp) {
+      this.particleSystem.visible = true;
       this.stopWatch.timeIsUp = false;
 
       const mobster = this.mob.setNextMobsterAsActive();
@@ -108,42 +116,6 @@ class MobWatchApp {
     }
   };
 
-  // setActiveMobster = mobster => {
-  //   this.orbitingSpotLight.setOrbitingCenter(mobster);
-  //   this.clockDisplay.alignToTargetHeight(mobster.getCenterPoint());
-  // };
-
-  animate = () => {
-    requestAnimationFrame(this.animate);
-
-    this.isTimeUp();
-
-    this.orbitingSpotLight.calculateNewPosition();
-    //this.cameraHelper.update();
-    if (this.clockDisplay) this.setClockDisplayText();
-    this.renderer.render(this.scene, this.camera);
-  };
-  loadMobsters = textFont => {
-    this.textFont = textFont;
-
-    // this.addNewMobster('olbap 1');
-    // this.addNewMobster('olbap 22');
-    // this.addNewMobster('olbap 333');
-    // this.addNewMobster('olbap 4444');
-    // this.addNewMobster('olbap 55555');
-    // this.addNewMobster('olbap 666666');
-
-    //    this.mob.setActiveMobsterByIndex(3);
-    //   this.orbitingSpotLight.setOrbitingCenter(this.mob.getMobster(3));
-  };
-  loadClockDisplay = numberFont => {
-    this.clockDisplay = new ClockDisplay(
-      numberFont,
-      0x00ff00,
-      new THREE.Vector3(-4, 0, 0)
-    );
-    this.scene.add(this.clockDisplay);
-  };
   setActiveMobster = mobster => {
     this.mob.setActiveMobster(mobster);
     this.orbitingSpotLight.setOrbitingCenter(mobster);
@@ -176,12 +148,42 @@ class MobWatchApp {
   stopWatchStart = () => {
     this.stopWatch.start();
     this.orbitingSpotLight.paused = true;
+    this.particleSystem.visible = false;
   };
   stopWatchPause = () => {
-    this.orbitingSpotLight.paused = this.stopWatch.pause();
+    this.orbitingSpotLight.paused = !this.stopWatch.pause();
+    this.particleSystem.visible = !this.orbitingSpotLight.paused;
   };
   stopWatchReset = () => {
     this.stopWatch.reset();
     this.orbitingSpotLight.paused = false;
+    this.particleSystem.visible = true;
+  };
+  loadMobsters = textFont => {
+    this.textFont = textFont;
+  };
+  loadClockDisplay = numberFont => {
+    this.clockDisplay = new ClockDisplay(
+      numberFont,
+      0x00ff00,
+      new THREE.Vector3(-4, 0, 0)
+    );
+    this.scene.add(this.clockDisplay);
+  };
+  loadParticleSystem = font => {
+    let size = new THREE.Vector2();
+    this.renderer.getSize(size);
+    this.particleSystem = new ParticleSystem(font, 100, 50, 20);
+    this.scene.add(this.particleSystem);
+  };
+  animate = () => {
+    requestAnimationFrame(this.animate);
+    this.isTimeUp();
+    this.orbitingSpotLight.calculateNewPosition();
+    if (this.clockDisplay) {
+      this.setClockDisplayText();
+    }
+    this.particleSystem.moveParticles();
+    this.renderer.render(this.scene, this.camera);
   };
 }

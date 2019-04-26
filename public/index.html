@@ -44,7 +44,34 @@
     <script src="./javascripts/OrbitingSpotLight.js"></script>
     <script src="./javascripts/ClockDisplay.js"></script>
     <script src="./javascripts/Mob.js"></script>
+    <script src="./javascripts/ParticleSystem.js"></script>
     <script src="./javascripts/MobWatchApp.js"></script>
+    <script>
+      const doPause = () => {
+        document.getElementById('btnPause').style.display = 'none';
+        document.getElementById('btnStart').style.display = 'none';
+        document.getElementById('btnResume').style.display = 'inline-block';
+        document.getElementById('btnReset').style.display = 'inline-block';
+      };
+      const doStart = () => {
+        document.getElementById('btnPause').style.display = 'inline-block';
+        document.getElementById('btnStart').style.display = 'none';
+        document.getElementById('btnResume').style.display = 'none';
+        document.getElementById('btnReset').style.display = 'inline-block';
+      };
+      const doReset = () => {
+        document.getElementById('btnPause').style.display = 'none';
+        document.getElementById('btnStart').style.display = 'inline-block';
+        document.getElementById('btnResume').style.display = 'none';
+        document.getElementById('btnReset').style.display = 'none';
+      };
+      const doResume = () => {
+        document.getElementById('btnPause').style.display = 'inline-block';
+        document.getElementById('btnStart').style.display = 'none';
+        document.getElementById('btnResume').style.display = 'none';
+        document.getElementById('btnReset').style.display = 'inline-block';
+      };
+    </script>
   </head>
   <body>
     <div class="mob-gui">
@@ -67,9 +94,42 @@
         />
       </div>
       <div class="mob-gui-element">
-        <button onclick="mobWatchApp.stopWatchStart();">Start timer</button>
-        <button onclick="mobWatchApp.stopWatchPause();">Pause timer</button>
-        <button onclick="mobWatchApp.stopWatchReset();">Reset timer</button>
+        <button id="btnStart" onclick="mobWatchApp.stopWatchStart();doStart();">
+          <img
+            title="start"
+            src="https://material.io/tools/icons/static/icons/baseline-play_circle_outline-24px.svg"
+          />
+        </button>
+        <button
+          id="btnPause"
+          onclick="mobWatchApp.stopWatchPause();doPause();"
+          style="display: none;"
+        >
+          <img
+            title="pause"
+            src="https://material.io/tools/icons/static/icons/baseline-pause_circle_outline-24px.svg"
+          />
+        </button>
+        <button
+          id="btnResume"
+          onclick="mobWatchApp.stopWatchPause();doResume();"
+          style="display: none;"
+        >
+          <img
+            title="resume"
+            src="https://material.io/tools/icons/static/icons/baseline-play_circle_outline-24px.svg"
+          />
+        </button>
+        <button
+          id="btnReset"
+          onclick="mobWatchApp.stopWatchReset();doReset();"
+          style="display: none;"
+        >
+          <img
+            title="reset"
+            src="https://material.io/tools/icons/static/icons/baseline-settings_backup_restore-24px.svg"
+          />
+        </button>
       </div>
     </div>
 
@@ -81,6 +141,7 @@
       loader.load('./helvetiker_regular.typeface.json', font => {
         mobWatchApp.loadMobsters(font);
         mobWatchApp.loadClockDisplay(font);
+        mobWatchApp.loadParticleSystem(font);
       });
       window.addEventListener('mousemove', mobWatchApp.onMouseMove, false);
       window.addEventListener('mouseup', mobWatchApp.onMouseUp, false);
