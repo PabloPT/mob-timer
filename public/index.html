@@ -47,25 +47,25 @@
     <script src="./javascripts/ParticleSystem.js"></script>
     <script src="./javascripts/MobWatchApp.js"></script>
     <script>
-      const doPause = () => {
+      doPause = function() {
         document.getElementById('btnPause').style.display = 'none';
         document.getElementById('btnStart').style.display = 'none';
         document.getElementById('btnResume').style.display = 'inline-block';
         document.getElementById('btnReset').style.display = 'inline-block';
       };
-      const doStart = () => {
+      doStart = function() {
         document.getElementById('btnPause').style.display = 'inline-block';
         document.getElementById('btnStart').style.display = 'none';
         document.getElementById('btnResume').style.display = 'none';
         document.getElementById('btnReset').style.display = 'inline-block';
       };
-      const doReset = () => {
+      doReset = function() {
         document.getElementById('btnPause').style.display = 'none';
         document.getElementById('btnStart').style.display = 'inline-block';
         document.getElementById('btnResume').style.display = 'none';
         document.getElementById('btnReset').style.display = 'none';
       };
-      const doResume = () => {
+      doResume = function() {
         document.getElementById('btnPause').style.display = 'inline-block';
         document.getElementById('btnStart').style.display = 'none';
         document.getElementById('btnResume').style.display = 'none';
@@ -79,7 +79,7 @@
         <input type="text" id="mobsterNameInput" placeholder="mobster name" />
         <button
           id="addMobsterBtn"
-          onclick="mobWatchApp.addNewMobster(getElementById('mobsterNameInput').value);"
+          onclick="mobWatchApp.addNewMobster(getElementById('mobsterNameInput').value);document.getElementById('mobsterNameInput').value = '';"
         >
           Add mobster
         </button>
@@ -139,17 +139,12 @@
       const mobWatchApp = new MobWatchApp();
       const loader = new THREE.FontLoader();
       loader.load('./helvetiker_regular.typeface.json', font => {
-        mobWatchApp.loadMobsters(font);
         mobWatchApp.loadClockDisplay(font);
+        mobWatchApp.loadMobsters(font);
         mobWatchApp.loadParticleSystem(font);
       });
       window.addEventListener('mousemove', mobWatchApp.onMouseMove, false);
       window.addEventListener('mouseup', mobWatchApp.onMouseUp, false);
-      // window.addEventListener(
-      //   'keyup',
-      //   mobWatchApp.pauseOrbitingSpotLight,
-      //   false
-      // );
     </script>
   </body>
 </html>

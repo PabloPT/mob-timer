@@ -15,8 +15,7 @@ class OrbitingSpotLight extends THREE.SpotLight {
 
   setOrbitingCenter(mobsterTextMesh) {
     const newCenterPoint = mobsterTextMesh.getCenterPoint();
-    this.spotLightPositionY = newCenterPoint.y;
-    //this.elipseRevolvingPointX = newCenterPoint.x;
+    this.spotLightPositionY = newCenterPoint.y + 1;
     this.elipseRevolvingPointY = newCenterPoint.y;
 
     this.elipseRevolvingPointZ = 0;
@@ -25,6 +24,7 @@ class OrbitingSpotLight extends THREE.SpotLight {
       newCenterPoint.y,
       newCenterPoint.z
     );
+    this.position.y = this.spotLightPositionY;
     const boxSize = new THREE.Vector3();
     mobsterTextMesh.geometry.computeBoundingBox();
     mobsterTextMesh.geometry.boundingBox.getSize(boxSize);
@@ -43,8 +43,7 @@ class OrbitingSpotLight extends THREE.SpotLight {
   spotLightIsInFrontOfTarget() {
     return (
       this.position.z > 0 &&
-      Math.round(this.position.x * 10) ===
-        Math.round(this.target.position.x * 10)
+      Math.round(this.position.x) === Math.round(this.target.position.x)
     );
   }
 

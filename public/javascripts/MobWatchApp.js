@@ -19,7 +19,7 @@ class MobWatchApp {
     );
     this.camera.position.set(0, 0, 15);
 
-    this.ambientLight = new THREE.AmbientLight(0x404040);
+    this.ambientLight = new THREE.AmbientLight(0x808080);
 
     this.spotLightTarget = new THREE.Mesh(
       new THREE.SphereBufferGeometry(0.1, 16, 8),
@@ -51,22 +51,24 @@ class MobWatchApp {
     window.addEventListener('resize', this.resizeCamera, false);
 
     this.animate();
-
-    //this.stopWatch = new StopWatch(10);
   }
 
   addNewMobster = name => {
-    const mobster = new MobsterTextMesh(name, this.textFont, 0xff0000);
+    const mobster = new MobsterTextMesh(name, this.textFont, 0x00ff00);
     this.mob.addMobster(mobster);
     this.scene.add(mobster);
     this.mob.positionMobsters();
 
-    if (this.mob.mobsters.length === 1) this.setActiveMobster(mobster);
-    else {
-      this.setActiveMobster(this.mob.getMobster(0));
+    if (this.mob.mobsters.length === 1) {
+      this.setActiveMobster(mobster);
+      this.orbitingSpotLight.visible = true;
+      this.orbitingSpotLight.paused = false;
+    } else {
+      this.clockDisplay.alignToTargetHeight(
+        this.mob.getMobster(0).getCenterPoint()
+      );
+      this.orbitingSpotLight.setOrbitingCenter(this.mob.getMobster(0));
     }
-    this.orbitingSpotLight.visible = true;
-    this.orbitingSpotLight.paused = false;
   };
 
   createOrbitingSpotLight = spotLightTarget => {
@@ -122,11 +124,29 @@ class MobWatchApp {
     this.clockDisplay.alignToTargetHeight(mobster.getCenterPoint());
     //set clock display to duration again??
     this.stopWatch.reset();
+    this.orbitingSpotLight.paused = false;
+    window.doReset();
   };
 
   onMouseMove = event => {
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    // this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // this.raycaster.setFromCamera(this.mouse, this.camera);
+    // // calculate objects intersecting the picking ray
+    // const intersects = this.raycaster.intersectObjects(
+    //   //this.scene.children,
+    //   this.mob.mobsters,
+    //   true
+    // );
+    // for (let hitObject of intersects) {
+    //   if (
+    //     hitObject.object.parent &&
+    //     hitObject.object.parent instanceof MobsterTextMesh
+    //   ) {
+    //     console.log('hit!');
+    //     hitObject.object.parent.setBright();
+    //   }
+    // }
   };
   onMouseUp = event => {
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -135,10 +155,16 @@ class MobWatchApp {
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
     // calculate objects intersecting the picking ray
-    const intersects = this.raycaster.intersectObjects(this.scene.children);
+    const intersects = this.raycaster.intersectObjects(
+      this.scene.children,
+      true
+    );
     for (let hitObject of intersects) {
-      if (hitObject.object instanceof MobsterTextMesh) {
-        this.setActiveMobster(hitObject.object);
+      if (
+        hitObject.object.parent &&
+        hitObject.object.parent instanceof MobsterTextMesh
+      ) {
+        this.setActiveMobster(hitObject.object.parent);
       }
     }
   };
@@ -151,8 +177,9 @@ class MobWatchApp {
     this.particleSystem.visible = false;
   };
   stopWatchPause = () => {
-    this.orbitingSpotLight.paused = !this.stopWatch.pause();
-    this.particleSystem.visible = !this.orbitingSpotLight.paused;
+    this.stopWatch.pause();
+    this.orbitingSpotLight.paused = false;
+    this.particleSystem.visible = true;
   };
   stopWatchReset = () => {
     this.stopWatch.reset();
