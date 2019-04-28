@@ -10,6 +10,12 @@ class Mob {
     return this.mobsters[index];
   }
 
+  getActiveMobster() {
+    return this.mobsters.find(m => {
+      return m.active;
+    });
+  }
+
   setActiveMobster(mobster) {
     if (
       !this.mobsters.find(m => {
