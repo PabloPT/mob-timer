@@ -109,12 +109,13 @@ class MobWatchApp {
 
   isTimeUp = () => {
     if (this.stopWatch.timeIsUp) {
-      this.particleSystem.visible = true;
       this.stopWatch.timeIsUp = false;
 
       const mobster = this.mob.setNextMobsterAsActive();
       //recator this..
       this.setActiveMobster(mobster);
+      this.particleSystem.setOriginPosition(mobster.getCenterPoint());
+      this.particleSystem.visible = true;
     }
   };
 
@@ -179,11 +180,15 @@ class MobWatchApp {
   stopWatchPause = () => {
     this.stopWatch.pause();
     this.orbitingSpotLight.paused = false;
+    const activeMobster = this.mob.getActiveMobster();
+    this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
     this.particleSystem.visible = true;
   };
   stopWatchReset = () => {
     this.stopWatch.reset();
     this.orbitingSpotLight.paused = false;
+    const activeMobster = this.mob.getActiveMobster();
+    this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
     this.particleSystem.visible = true;
   };
   loadMobsters = textFont => {

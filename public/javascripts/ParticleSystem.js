@@ -6,7 +6,6 @@ class ParticleSystem extends THREE.Group {
     this.visible = false;
     this.sceneHeight = sceneHeight;
     this.sceneWidth = sceneWidth;
-    console.log(this.sceneHeight, this.sceneWidth);
     if (!font && !particleCount) {
       return;
     }
@@ -29,7 +28,8 @@ class ParticleSystem extends THREE.Group {
   }
 
   generateRandomColor = () => {
-    return Math.floor(0x1000000 * Math.random());
+    //return Math.floor(0x1000000 * Math.random());
+    return Math.floor(0x100 * Math.random()) << 8; //shades of green
   };
 
   generateRandomLetter() {
@@ -39,6 +39,12 @@ class ParticleSystem extends THREE.Group {
       Math.random() * (letterToChooseFrom.length - 0) + 0
     );
     return letterToChooseFrom.substring(randomNumber, randomNumber + 1);
+  }
+
+  setOriginPosition(position) {
+    if (position) {
+      this.position.set(position.x, position.y, position.z);
+    }
   }
 
   moveParticles() {
