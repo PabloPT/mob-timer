@@ -21,8 +21,10 @@ class Mob {
     for (let m of this.mobsters) {
       if (m != mobster) {
         m.active = false;
+        m.setDull();
       } else {
         m.active = true;
+        m.setBright();
       }
     }
   }
@@ -35,8 +37,10 @@ class Mob {
     for (let m of this.mobsters) {
       if (m != toBeActiveMobster) {
         m.active = false;
+        m.setDull();
       } else {
         m.active = true;
+        m.setBright();
       }
     }
   }

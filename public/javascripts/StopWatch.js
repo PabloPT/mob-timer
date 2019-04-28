@@ -1,3 +1,5 @@
+//TODO: implement THREE.Clock for easier time keeping
+
 class StopWatch extends THREE.Group {
   durationSeconds = 60;
   countDownSeconds = 0;
