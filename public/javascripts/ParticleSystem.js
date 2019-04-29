@@ -1,9 +1,9 @@
 class ParticleSystem extends THREE.Group {
+  showParticles = false;
   velocityMax = 5;
   liftMax = 8;
   constructor(font, particleCount, sceneWidth, sceneHeight) {
     super();
-    this.visible = false;
     this.sceneHeight = sceneHeight;
     this.sceneWidth = sceneWidth;
     if (!font && !particleCount) {
@@ -27,8 +27,16 @@ class ParticleSystem extends THREE.Group {
     }
   }
 
+  show() {
+    this.showParticles = true;
+  }
+
+  hide() {
+    this.showParticles = false;
+  }
+
   generateRandomColor = () => {
-    //return Math.floor(0x1000000 * Math.random());
+    //return Math.floor(0x1000000 * Math.random());//any color
     return Math.floor(0x100 * Math.random()) << 8; //shades of green
   };
 
@@ -56,21 +64,21 @@ class ParticleSystem extends THREE.Group {
         p.position.x,
         p.position.x + p.velocity,
         0.1
-      ); //*= 0.01; // *= 0.5;
+      );
 
       //if out of scene, reinitiate
       if (p.position.y < -this.sceneHeight) {
+        p.visible = this.showParticles;
         p.position.y = 0;
         p.lift = Math.random() * (this.liftMax - 1) + 1;
-        //if (p.position.x > 10 || p.position.x < -10) {
         p.velocity =
           Math.random() * (this.velocityMax - -this.velocityMax) +
           -this.velocityMax;
         p.position.x = 0;
-        //};
       }
 
       if (p.position.x > this.sceneWidth || p.position.x < -this.sceneWidth) {
+        p.visible = this.showParticles;
         p.position.y = 0;
         p.lift = Math.random() * (this.liftMax - 1) + 1;
         p.velocity =

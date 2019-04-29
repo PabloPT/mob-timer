@@ -112,10 +112,11 @@ class MobWatchApp {
       this.stopWatch.timeIsUp = false;
 
       const mobster = this.mob.setNextMobsterAsActive();
-      //recator this..
-      this.setActiveMobster(mobster);
-      this.particleSystem.setOriginPosition(mobster.getCenterPoint());
-      this.particleSystem.visible = true;
+      if (mobster) {
+        this.setActiveMobster(mobster);
+        this.particleSystem.setOriginPosition(mobster.getCenterPoint());
+      }
+      this.particleSystem.show();
     }
   };
 
@@ -123,39 +124,19 @@ class MobWatchApp {
     this.mob.setActiveMobster(mobster);
     this.orbitingSpotLight.setOrbitingCenter(mobster);
     this.clockDisplay.alignToTargetHeight(mobster.getCenterPoint());
-    //set clock display to duration again??
+    this.particleSystem.setOriginPosition(mobster.getCenterPoint());
     this.stopWatch.reset();
     this.orbitingSpotLight.paused = false;
     window.doReset();
   };
 
-  onMouseMove = event => {
-    // this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    // this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    // this.raycaster.setFromCamera(this.mouse, this.camera);
-    // // calculate objects intersecting the picking ray
-    // const intersects = this.raycaster.intersectObjects(
-    //   //this.scene.children,
-    //   this.mob.mobsters,
-    //   true
-    // );
-    // for (let hitObject of intersects) {
-    //   if (
-    //     hitObject.object.parent &&
-    //     hitObject.object.parent instanceof MobsterTextMesh
-    //   ) {
-    //     console.log('hit!');
-    //     hitObject.object.parent.setBright();
-    //   }
-    // }
-  };
+  onMouseMove = event => {};
   onMouseUp = event => {
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
-    // calculate objects intersecting the picking ray
     const intersects = this.raycaster.intersectObjects(
       this.scene.children,
       true
@@ -175,21 +156,21 @@ class MobWatchApp {
   stopWatchStart = () => {
     this.stopWatch.start();
     this.orbitingSpotLight.paused = true;
-    this.particleSystem.visible = false;
+    this.particleSystem.hide();
   };
   stopWatchPause = () => {
     this.stopWatch.pause();
     this.orbitingSpotLight.paused = false;
     const activeMobster = this.mob.getActiveMobster();
     this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
-    this.particleSystem.visible = true;
+    this.particleSystem.show();
   };
   stopWatchReset = () => {
     this.stopWatch.reset();
     this.orbitingSpotLight.paused = false;
     const activeMobster = this.mob.getActiveMobster();
     this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
-    this.particleSystem.visible = true;
+    this.particleSystem.show();
   };
   loadMobsters = textFont => {
     this.textFont = textFont;
