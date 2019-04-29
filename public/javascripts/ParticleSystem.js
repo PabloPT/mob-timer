@@ -19,7 +19,10 @@ class ParticleSystem extends THREE.Group {
         }),
         new THREE.MeshLambertMaterial({ color: this.generateRandomColor() })
       );
-      letterMesh.velocity =
+      letterMesh.velocityX =
+        Math.random() * (this.velocityMax - -this.velocityMax) +
+        -this.velocityMax;
+      letterMesh.velocityZ =
         Math.random() * (this.velocityMax - -this.velocityMax) +
         -this.velocityMax;
       letterMesh.lift = Math.random() * (this.liftMax - 1) + 1;
@@ -63,30 +66,37 @@ class ParticleSystem extends THREE.Group {
 
       p.position.x = THREE.Math.lerp(
         p.position.x,
-        p.position.x + p.velocity,
+        p.position.x + p.velocityX,
+        0.1
+      );
+
+      p.position.z = THREE.Math.lerp(
+        p.position.z,
+        p.position.z + p.velocityZ,
         0.1
       );
 
       //if out of scene, reinitiate
       if (p.position.y < -this.sceneHeight) {
-        p.visible = this.showParticles;
-        p.position.y = this.originPosition.y; //0;
-        p.lift = Math.random() * (this.liftMax - 1) + 1;
-        p.velocity =
-          Math.random() * (this.velocityMax - -this.velocityMax) +
-          -this.velocityMax;
-        p.position.x = this.originPosition.x;
+        this.reInitiateParticle(p);
       }
 
       if (p.position.x > this.sceneWidth || p.position.x < -this.sceneWidth) {
-        p.visible = this.showParticles;
-        p.position.y = this.originPosition.y;
-        p.lift = Math.random() * (this.liftMax - 1) + 1;
-        p.velocity =
-          Math.random() * (this.velocityMax - -this.velocityMax) +
-          -this.velocityMax;
-        p.position.x = this.originPosition.x;
+        this.reInitiateParticle(p);
       }
     });
+  }
+  reInitiateParticle(p) {
+    p.visible = this.showParticles;
+    p.position.y = this.originPosition.y;
+    p.lift = Math.random() * (this.liftMax - 1) + 1;
+    p.velocityX =
+      Math.random() * (this.velocityMax - -this.velocityMax) +
+      -this.velocityMax;
+    p.velocityZ =
+      Math.random() * (this.velocityMax - -this.velocityMax) +
+      -this.velocityMax;
+    p.position.x = this.originPosition.x;
+    p.position.z = this.originPosition.z;
   }
 }
