@@ -1,4 +1,5 @@
 class ParticleSystem extends THREE.Group {
+  originPosition = new THREE.Vector3(0, 0, 0);
   showParticles = false;
   velocityMax = 5;
   liftMax = 8;
@@ -51,7 +52,7 @@ class ParticleSystem extends THREE.Group {
 
   setOriginPosition(position) {
     if (position) {
-      this.position.set(position.x, position.y, position.z);
+      this.originPosition = position;
     }
   }
 
@@ -69,22 +70,22 @@ class ParticleSystem extends THREE.Group {
       //if out of scene, reinitiate
       if (p.position.y < -this.sceneHeight) {
         p.visible = this.showParticles;
-        p.position.y = 0;
+        p.position.y = this.originPosition.y; //0;
         p.lift = Math.random() * (this.liftMax - 1) + 1;
         p.velocity =
           Math.random() * (this.velocityMax - -this.velocityMax) +
           -this.velocityMax;
-        p.position.x = 0;
+        p.position.x = this.originPosition.x;
       }
 
       if (p.position.x > this.sceneWidth || p.position.x < -this.sceneWidth) {
         p.visible = this.showParticles;
-        p.position.y = 0;
+        p.position.y = this.originPosition.y;
         p.lift = Math.random() * (this.liftMax - 1) + 1;
         p.velocity =
           Math.random() * (this.velocityMax - -this.velocityMax) +
           -this.velocityMax;
-        p.position.x = 0;
+        p.position.x = this.originPosition.x;
       }
     });
   }
