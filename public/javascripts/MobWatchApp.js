@@ -159,17 +159,19 @@ class MobWatchApp {
     this.particleSystem.hide();
   };
   stopWatchPause = () => {
-    this.stopWatch.pause();
-    this.orbitingSpotLight.paused = false;
-    const activeMobster = this.mob.getActiveMobster();
-    this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
-    this.particleSystem.show();
+    if (this.stopWatch.paused) {
+      this.stopWatch.resume();
+      this.orbitingSpotLight.paused = true;
+      this.particleSystem.hide();
+    } else {
+      this.stopWatch.pause();
+      this.orbitingSpotLight.paused = false;
+      this.particleSystem.show();
+    }
   };
   stopWatchReset = () => {
     this.stopWatch.reset();
     this.orbitingSpotLight.paused = false;
-    const activeMobster = this.mob.getActiveMobster();
-    this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
     this.particleSystem.show();
   };
   loadMobsters = textFont => {
