@@ -35,7 +35,7 @@ class StopWatch extends THREE.Group {
         return;
       }
       this.countDownSeconds--;
-      if (this.countDownSeconds === 0) {
+      if (this.countDownSeconds <= 0) {
         this.timeIsUp = true;
         this.isRunning = false;
         clearInterval(this.intervalHandle);
@@ -44,8 +44,11 @@ class StopWatch extends THREE.Group {
   }
   pause() {
     //pause count down
-    this.paused = !this.paused;
-    return this.paused;
+    this.paused = true;
+  }
+  resume() {
+    //pause count down
+    this.paused = false;
   }
   reset() {
     clearInterval(this.intervalHandle);
