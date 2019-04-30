@@ -1,6 +1,7 @@
 class Mob {
-  mobsters = [];
-  constructor() {}
+  constructor() {
+    this.mobsters = [];
+  }
 
   addMobster(mobster) {
     this.mobsters.push(mobster);

@@ -1,17 +1,18 @@
 class OrbitingSpotLight extends THREE.SpotLight {
-  paused = false;
   constructor(color) {
     super(color);
+    this.elipseMaxWidth = 3; //elipsens x-längd
+    this.elipseMaxDepth = 2; //elipsens z-längd
+    this.elipseRevolvingPointX = 0; //start x
+    this.elipseRevolvingPointY = 0; //start py
+    this.elipseRevolvingPointZ = 0;
+    this.timeAlpha = 0;
+    this.spotLightPositionX = 0;
+    this.spotLightPositionY = 0; //height or orbit
+    this.spotLightPositionZ = 0;
+    this.paused = false;
+    this.visible = false;
   }
-  elipseMaxWidth = 3; //elipsens x-längd
-  elipseMaxDepth = 2; //elipsens z-längd
-  elipseRevolvingPointX = 0; //start x
-  elipseRevolvingPointY = 0; //start py
-  elipseRevolvingPointZ = 0;
-  timeAlpha = 0;
-  spotLightPositionX = 0;
-  spotLightPositionY = 0; //height or orbit
-  spotLightPositionZ = 0;
 
   setOrbitingCenter(mobsterTextMesh) {
     const newCenterPoint = mobsterTextMesh.getCenterPoint();
@@ -29,6 +30,20 @@ class OrbitingSpotLight extends THREE.SpotLight {
     mobsterTextMesh.geometry.computeBoundingBox();
     mobsterTextMesh.geometry.boundingBox.getSize(boxSize);
     this.elipseMaxWidth = boxSize.x + 1;
+  }
+
+  show() {
+    this.visible = true;
+  }
+  hide() {
+    this.visible = false;
+  }
+
+  pause() {
+    this.paused = true;
+  }
+  resume() {
+    this.paused = false;
   }
 
   togglePauseOrbit() {

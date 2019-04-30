@@ -1,14 +1,14 @@
 //TODO: implement THREE.Clock for easier time keeping
 
 class StopWatch extends THREE.Group {
-  durationSeconds = 60;
-  countDownSeconds = 0;
-  intervalHandle = null;
-  isRunning = false;
-  paused = false;
-  timeIsUp = false;
   constructor(durationMinutes) {
     super();
+    this.durationSeconds = 60;
+    this.countDownSeconds = 0;
+    this.intervalHandle = null;
+    this.isRunning = false;
+    this.paused = false;
+    this.timeIsUp = false;
     this.setDuration(durationMinutes);
   }
 
