@@ -134,8 +134,6 @@
     </div>
 
     <script>
-      //classes
-
       const mobWatchApp = new MobWatchApp();
       const loader = new THREE.FontLoader();
       loader.load('./helvetiker_regular.typeface.json', font => {
@@ -143,8 +141,21 @@
         mobWatchApp.loadMobsters(font);
         mobWatchApp.loadParticleSystem(font);
       });
-      window.addEventListener('mousemove', mobWatchApp.onMouseMove, false);
-      window.addEventListener('mouseup', mobWatchApp.onMouseUp, false);
+      window.addEventListener(
+        'mousemove',
+        event => mobWatchApp.onMouseMove(event),
+        false
+      );
+      window.addEventListener(
+        'mouseup',
+        event => mobWatchApp.onMouseUp(event),
+        false
+      );
+      window.addEventListener(
+        'resize',
+        event => mobWatchApp.resizeCamera(event),
+        false
+      );
     </script>
   </body>
 </html>

@@ -1,10 +1,11 @@
 class ClockDisplay extends THREE.Group {
-  clockDisplayMesh;
-  font;
-  color;
-  position;
   constructor(font, color, position) {
     super();
+
+    this.clockDisplayMesh;
+    this.font;
+    this.color;
+    this.position;
 
     if (!font && !color && !position) {
       return;
@@ -12,7 +13,7 @@ class ClockDisplay extends THREE.Group {
 
     this.font = font;
     this.color = color;
-    this.position = position;
+    this.position.set(position.x, position.y, position.z);
     this.createText('00:00');
     this.add(this.clockDisplayMesh);
   }

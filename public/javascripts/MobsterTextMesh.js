@@ -1,5 +1,4 @@
 class MobsterTextMesh extends THREE.Mesh {
-  dullFactor = 0.5;
   constructor(name, font, color) {
     super(
       new THREE.TextGeometry(name, {
@@ -9,6 +8,7 @@ class MobsterTextMesh extends THREE.Mesh {
       }),
       new THREE.MeshLambertMaterial({ color: color })
     );
+    this.dullFactor = 0.5;
     this.material.color.set(color * this.dullFactor);
     if (!this.geometry.boundingBox) {
       this.geometry.computeBoundingBox();

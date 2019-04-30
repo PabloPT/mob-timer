@@ -1,10 +1,10 @@
 class ParticleSystem extends THREE.Group {
-  originPosition = new THREE.Vector3(0, 0, 0);
-  showParticles = false;
-  velocityMax = 5;
-  liftMax = 8;
   constructor(font, particleCount, sceneWidth, sceneHeight) {
     super();
+    this.originPosition = new THREE.Vector3(0, 0, 0);
+    this.showParticles = false;
+    this.velocityMax = 5;
+    this.liftMax = 8;
     this.sceneHeight = sceneHeight;
     this.sceneWidth = sceneWidth;
     if (!font && !particleCount) {
@@ -39,10 +39,10 @@ class ParticleSystem extends THREE.Group {
     this.showParticles = false;
   }
 
-  generateRandomColor = () => {
+  generateRandomColor() {
     //return Math.floor(0x1000000 * Math.random());//any color
     return Math.floor(0x100 * Math.random()) << 8; //shades of green
-  };
+  }
 
   generateRandomLetter() {
     const letterToChooseFrom =
