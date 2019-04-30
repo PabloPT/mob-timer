@@ -18,6 +18,8 @@ class MobWatchApp {
     );
     this.camera.position.set(0, 0, 15);
 
+    this.controls = new THREE.TrackballControls(this.camera);
+
     this.ambientLight = new THREE.AmbientLight(0x808080);
 
     this.spotLightTarget = new THREE.Mesh(
@@ -196,6 +198,7 @@ class MobWatchApp {
       this.setClockDisplayText();
     }
     this.particleSystem.moveParticles();
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
 }

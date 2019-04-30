@@ -38,6 +38,7 @@
       }
     </style>
     <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js"></script>
     <script src="./javascripts/MobsterTextMesh.js"></script>
     <script src="./javascripts/NixieTubeBulb.js"></script>
     <script src="./javascripts/StopWatch.js"></script>
@@ -71,22 +72,32 @@
         document.getElementById('btnResume').style.display = 'none';
         document.getElementById('btnReset').style.display = 'inline-block';
       };
+      addNewClick = function(event) {
+        mobWatchApp.addNewMobster(
+          document.getElementById('mobsterNameInput').value
+        );
+        document.getElementById('mobsterNameInput').value = '';
+        event.preventDefault();
+      };
     </script>
   </head>
   <body>
     <div class="mob-gui">
       <div class="mob-gui-element">
-        <input type="text" id="mobsterNameInput" placeholder="mobster name" />
-        <button
-          id="addMobsterBtn"
-          onclick="mobWatchApp.addNewMobster(getElementById('mobsterNameInput').value);document.getElementById('mobsterNameInput').value = '';"
-        >
+        <input
+          onclick="this.focus();event.preventDefault();"
+          type="text"
+          id="mobsterNameInput"
+          placeholder="mobster name"
+        />
+        <button id="addMobsterBtn" onclick="this.focus();addNewClick(event);">
           Add mobster
         </button>
       </div>
       <div class="mob-gui-element">
         <div class="duration-text">Duration:</div>
         <input
+          onclick="this.focus();"
           type="number"
           id="timerLengthInput"
           value="10"
@@ -94,7 +105,10 @@
         />
       </div>
       <div class="mob-gui-element">
-        <button id="btnStart" onclick="mobWatchApp.stopWatchStart();doStart();">
+        <button
+          id="btnStart"
+          onclick="this.focus();mobWatchApp.stopWatchStart();doStart();"
+        >
           <img
             title="start"
             src="https://material.io/tools/icons/static/icons/baseline-play_circle_outline-24px.svg"
