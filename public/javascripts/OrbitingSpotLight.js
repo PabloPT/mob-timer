@@ -63,6 +63,18 @@ class OrbitingSpotLight extends THREE.SpotLight {
   }
 
   calculateNewPosition() {
+    if (this.position.z > 0) {
+      const lensflare = this.children.find(c => {
+        return c instanceof THREE.Lensflare;
+      });
+      if (lensflare) lensflare.visible = false;
+    } else {
+      const lensflare = this.children.find(c => {
+        return c instanceof THREE.Lensflare;
+      });
+      if (lensflare) lensflare.visible = true;
+    }
+
     if (this.paused && this.spotLightIsInFrontOfTarget()) {
       //hide spotlight geometry
       return;
