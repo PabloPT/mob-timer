@@ -18,8 +18,6 @@ class MobWatchApp {
     );
     this.camera.position.set(0, 0, 15);
 
-    this.controls = new THREE.TrackballControls(this.camera);
-
     this.ambientLight = new THREE.AmbientLight(0x808080);
 
     this.spotLightTarget = new THREE.Mesh(
@@ -85,6 +83,25 @@ class MobWatchApp {
     spotLight.shadow.camera.fov = 30;
     spotLight.angle = Math.PI / 10;
     spotLight.target = spotLightTarget;
+
+    //flares
+    const textureLoader = new THREE.TextureLoader();
+    const textureFlare0 = textureLoader.load(
+      'https://threejs.org/examples/textures/lensflare/lensflare0.png'
+    );
+    const textureFlare3 = textureLoader.load(
+      'https://threejs.org/examples/textures/lensflare/lensflare3.png'
+    );
+
+    const lensflare = new THREE.Lensflare();
+    lensflare.addElement(
+      new THREE.LensflareElement(textureFlare0, 100, 0, spotLight.color)
+    );
+    lensflare.addElement(new THREE.LensflareElement(textureFlare3, 60, 0.2));
+    lensflare.addElement(new THREE.LensflareElement(textureFlare3, 80, 0.5));
+    lensflare.addElement(new THREE.LensflareElement(textureFlare3, 120, 0.8));
+    lensflare.addElement(new THREE.LensflareElement(textureFlare3, 150, 1));
+    spotLight.add(lensflare);
     return spotLight;
   }
 
@@ -198,7 +215,6 @@ class MobWatchApp {
       this.setClockDisplayText();
     }
     this.particleSystem.moveParticles();
-    this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
 }
