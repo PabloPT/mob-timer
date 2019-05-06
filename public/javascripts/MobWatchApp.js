@@ -1,5 +1,6 @@
 class MobWatchApp {
   constructor() {
+    this.textureLoader = new THREE.TextureLoader();
     this.textFont;
     this.clockDisplay;
     this.raycaster = new THREE.Raycaster();
@@ -38,30 +39,25 @@ class MobWatchApp {
     mainSpotLight.shadow.camera.far = 4000;
     mainSpotLight.shadow.camera.fov = 30;
     mainSpotLight.angle = Math.PI / 10;
-
+    this.mob = new MobGroup();
     this.scene.add(this.ambientLight);
     this.scene.add(this.spotLightTarget);
     this.scene.add(this.orbitingSpotLight);
     this.scene.add(mainSpotLight);
-
-    this.mob = new Mob();
+    this.scene.add(this.mob);
 
     this.animate();
   }
 
   addNewMobster(name) {
-    const mobster = new MobsterTextMesh(name, this.textFont, 0x00ff00);
-    this.mob.addMobster(mobster);
-    this.scene.add(mobster);
+    const newMobster = this.mob.addMobster(name, this.textFont);
     this.mob.positionMobsters();
 
-    if (this.mob.mobsters.length === 1) {
-      this.setActiveMobster(mobster);
+    const activeMobster = this.mob.getActiveMobster();
+    if (activeMobster == newMobster) {
+      this.getReadyToStart(newMobster);
     } else {
-      const activeMobster = this.mob.getActiveMobster();
-      this.clockDisplay.alignToTargetHeight(activeMobster.getCenterPoint());
-      this.orbitingSpotLight.setOrbitingCenter(activeMobster); //reposition
-      this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
+      this.reAlignAroundActiveMobster(activeMobster);
     }
   }
 
@@ -85,11 +81,10 @@ class MobWatchApp {
     spotLight.target = spotLightTarget;
 
     //flares
-    const textureLoader = new THREE.TextureLoader();
-    const textureFlare0 = textureLoader.load(
+    const textureFlare0 = this.textureLoader.load(
       'https://threejs.org/examples/textures/lensflare/lensflare0.png'
     );
-    const textureFlare3 = textureLoader.load(
+    const textureFlare3 = this.textureLoader.load(
       'https://threejs.org/examples/textures/lensflare/lensflare3.png'
     );
 
@@ -126,21 +121,25 @@ class MobWatchApp {
 
       const mobster = this.mob.setNextMobsterAsActive();
       if (mobster) {
-        this.setActiveMobster(mobster);
+        this.getReadyToStart(mobster);
       }
     }
   }
 
-  setActiveMobster(mobster) {
+  getReadyToStart(mobster) {
     this.mob.setActiveMobster(mobster);
-    this.orbitingSpotLight.setOrbitingCenter(mobster);
+    this.reAlignAroundActiveMobster(mobster);
     this.orbitingSpotLight.resume();
     this.orbitingSpotLight.show();
-    this.clockDisplay.alignToTargetHeight(mobster.getCenterPoint());
-    this.particleSystem.setOriginPosition(mobster.getCenterPoint());
     this.particleSystem.show();
     this.stopWatch.reset();
     window.doReset();
+  }
+
+  reAlignAroundActiveMobster(activeMobster) {
+    this.clockDisplay.alignToTargetHeight(activeMobster.getCenterPoint());
+    this.particleSystem.setOriginPosition(activeMobster.getCenterPoint());
+    this.orbitingSpotLight.setOrbitingCenter(activeMobster);
   }
 
   onMouseMove(event) {}
@@ -162,7 +161,7 @@ class MobWatchApp {
         hitObject.object.parent &&
         hitObject.object.parent instanceof MobsterTextMesh
       ) {
-        this.setActiveMobster(hitObject.object.parent);
+        this.getReadyToStart(hitObject.object.parent);
       }
     }
   }

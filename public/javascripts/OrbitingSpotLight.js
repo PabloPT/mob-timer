@@ -1,6 +1,8 @@
 class OrbitingSpotLight extends THREE.SpotLight {
   constructor(color) {
     super(color);
+    // this.tick = 0;
+    // this.clock = new THREE.Clock();
     this.elipseMaxWidth = 3; //elipsens x-längd
     this.elipseMaxDepth = 2; //elipsens z-längd
     this.elipseRevolvingPointX = 0; //start x
@@ -12,6 +14,9 @@ class OrbitingSpotLight extends THREE.SpotLight {
     this.spotLightPositionZ = 0;
     this.paused = false;
     this.visible = false;
+    // const cometFactory = new CometFactory();
+    // this.comet = cometFactory.createComet();
+    // this.add(this.comet);
   }
 
   setOrbitingCenter(mobsterTextMesh) {
@@ -79,6 +84,8 @@ class OrbitingSpotLight extends THREE.SpotLight {
       //hide spotlight geometry
       return;
     }
+
+    //particles
     this.timeAlpha += 5;
     this.spotLightPositionX =
       this.elipseRevolvingPointX +
@@ -91,5 +98,28 @@ class OrbitingSpotLight extends THREE.SpotLight {
       this.spotLightPositionY,
       this.spotLightPositionZ
     );
+
+    // var delta = this.clock.getDelta() * 1;
+    // this.tick += delta;
+
+    // if (this.tick < 0) this.tick = 0;
+    // if (delta > 0) {
+    //   // this.optionsPSGPU.position.x =
+    //   //   Math.sin(this.tick * this.spawnerOptionsPSGPU.horizontalSpeed) * 20;
+    //   // this.optionsPSGPU.position.y =
+    //   //   Math.sin(this.tick * this.spawnerOptionsPSGPU.verticalSpeed) * 10;
+    //   // this.optionsPSGPU.position.z =
+    //   //   Math.sin(
+    //   //     this.tick * this.spawnerOptionsPSGPU.horizontalSpeed +
+    //   //       this.spawnerOptionsPSGPU.verticalSpeed
+    //   //   ) * 5;
+    //   for (var x = 0; x < this.comet.spawnerOptions.spawnRate * delta; x++) {
+    //     // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
+    //     // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+    //     this.comet.spawnParticle(this.comet.gpuParticleSystemOptions);
+    //   }
+    // }
+
+    // this.comet.update(this.tick);
   }
 }
