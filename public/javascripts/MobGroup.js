@@ -1,31 +1,39 @@
-class Mob {
+class MobGroup extends THREE.Group {
   constructor() {
-    this.mobsters = [];
+    super();
+    //this.mobsters = [];
   }
 
-  addMobster(mobster) {
-    this.mobsters.push(mobster);
+  addMobster(name, font) {
+    const newMobster = new MobsterTextMesh(name, font, 0x00ff00);
+    this.add(newMobster);
+
+    if (this.children.length === 1) {
+      this.setActiveMobster(newMobster);
+    }
+
+    return newMobster;
   }
 
   getMobster(index) {
-    return this.mobsters[index];
+    return this.children[index];
   }
 
   getActiveMobster() {
-    return this.mobsters.find(m => {
+    return this.children.find(m => {
       return m.active;
     });
   }
 
   setActiveMobster(mobster) {
     if (
-      !this.mobsters.find(m => {
+      !this.children.find(m => {
         return m === mobster;
       })
     ) {
       throw Error('Mobster not found in mob!');
     }
-    for (let m of this.mobsters) {
+    for (let m of this.children) {
       if (m != mobster) {
         m.active = false;
         m.setDull();
@@ -37,11 +45,11 @@ class Mob {
   }
 
   setActiveMobsterByIndex(index) {
-    const toBeActiveMobster = this.mobsters[index];
+    const toBeActiveMobster = this.children[index];
     if (!toBeActiveMobster) {
       throw Error('Mobster not found in mob!');
     }
-    for (let m of this.mobsters) {
+    for (let m of this.children) {
       if (m != toBeActiveMobster) {
         m.active = false;
         m.setDull();
@@ -52,18 +60,19 @@ class Mob {
     }
   }
   removeMobster(mobster) {
-    const indexToRemove = this.mobsters.findIndex(m => {
+    const indexToRemove = this.children.findIndex(m => {
       return m === mobster;
     });
-    this.mobsters.splice(indexToRemove, 1); //what if last index?
+
+    this.children.splice(indexToRemove, 1); //what if last index?
   }
 
   positionMobsters() {
-    const count = this.mobsters.length;
+    const count = this.children.length;
     if (!count) return;
 
     let startPositionY = (count * 1.5) / 2; // align around y=0
-    this.mobsters.forEach(mobster => {
+    this.children.forEach(mobster => {
       startPositionY -= 1.5;
       mobster.position.y = startPositionY;
     });
@@ -71,16 +80,16 @@ class Mob {
 
   setNextMobsterAsActive() {
     let activeMobster;
-    for (let i = 0; i < this.mobsters.length; i++) {
-      let m = this.mobsters[i];
+    for (let i = 0; i < this.children.length; i++) {
+      let m = this.children[i];
       if (m.active) {
         m.active = false;
-        if (i + 1 >= this.mobsters.length) {
-          this.mobsters[0].active = true;
-          activeMobster = this.mobsters[0];
+        if (i + 1 >= this.children.length) {
+          this.children[0].active = true;
+          activeMobster = this.children[0];
         } else {
-          this.mobsters[i + 1].active = true;
-          activeMobster = this.mobsters[i + 1];
+          this.children[i + 1].active = true;
+          activeMobster = this.children[i + 1];
         }
         break;
       }
